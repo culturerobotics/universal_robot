@@ -88,12 +88,7 @@
       <child link = "${prefix}shoulder_link" />
       <origin xyz="0.0 0.0 ${shoulder_height}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
-      <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
-      </xacro:unless>
-      <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="330.0" velocity="2.16"/>
-      </xacro:if>
+      <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -121,12 +116,7 @@
       <child link = "${prefix}upper_arm_link" />
       <origin xyz="0.0 ${shoulder_offset} 0.0" rpy="0.0 ${pi / 2.0} 0.0" />
       <axis xyz="0 1 0" />
-      <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
-      </xacro:unless>
-      <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="330.0" velocity="2.16"/>
-      </xacro:if>
+      <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="330.0" velocity="2.16"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -187,12 +177,7 @@
       <child link = "${prefix}wrist_1_link" />
       <origin xyz="0.0 0.0 ${forearm_length}" rpy="0.0 ${pi / 2.0} 0.0" />
       <axis xyz="0 1 0" />
-      <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
-      </xacro:unless>
-      <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
-      </xacro:if>
+      <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -220,12 +205,7 @@
       <child link = "${prefix}wrist_2_link" />
       <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
-      <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
-      </xacro:unless>
-      <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
-      </xacro:if>
+      <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -253,12 +233,7 @@
       <child link = "${prefix}wrist_3_link" />
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
-      <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
-      </xacro:unless>
-      <xacro:if value="${joint_limited}">
-        <limit lower="${-pi}" upper="${pi}" effort="54.0" velocity="3.2"/>
-      </xacro:if>
+      <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="54.0" velocity="3.2"/>
       <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -294,6 +269,52 @@
         </geometry>
         <origin rpy="0 0 0" xyz="-0.01 0 0"/>
       </collision>
+    </link>
+
+    <joint name="${prefix}fingertip_fixed_joint" type="fixed">
+      <parent link="${prefix}ee_link" />
+      <child link = "${prefix}fingertip_link" />
+      <origin xyz="0.17 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${prefix}fingertip_link">
+      <visual>
+        <geometry>
+          <box size="0.01 0.01 0.01"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </visual>
+    </link>
+
+    <joint name="${prefix}hand" type="fixed">
+      <parent link="${prefix}ee_link" />
+      <child link = "${prefix}hand_link" />
+      <!-- use this line if you want a rotation of the hand -->
+      <!--<origin xyz="0.0 0.13 0.0" rpy="0.0 ${pi/2.0} 0.0" /> -->
+      <origin xyz="0.0 0.0 0.13" rpy="0.0 ${pi/2.0} 0.0" />
+    </joint>
+
+    <link name="${prefix}hand_link">
+      <visual>
+        <!-- delete this line if you want a rotation of the hand -->
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 ${pi/2.0}" />
+        <geometry>
+          <mesh filename="package://ur_description/meshes/ur3/visual/fingers.dae"/>
+        </geometry>
+        <material name="LightGrey">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <!-- delete this line if you want a rotation of the hand -->
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 ${pi/2.0}" />
+        <geometry>
+          <mesh filename="package://ur_description/meshes/ur3/collision/fingers.dae"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="0.075" length="0.05" mass=".5">
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
     </link>
 
     <xacro:ur_arm_transmission prefix="${prefix}" />
