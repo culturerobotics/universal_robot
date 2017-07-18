@@ -10,5 +10,9 @@
   <include file="$(find ur3_moveit_config)/launch/move_group.launch">
     <arg name="limited" default="$(arg limited)"/>
     <arg name="debug" default="$(arg debug)" />
-  </include>
+  </include>  
+
+  <group ns="move_group">
+    <rosparam command="load" file="$(find ur3_moveit_config)/config/kinematics.yaml"/>
+  </group>
 </launch>
